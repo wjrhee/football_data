@@ -1,13 +1,11 @@
 import bs4
 import requests
-from lxml import html
 
 headers = []
 headersDescription = []
 
 page = "http://www.pro-football-reference.com/years/2016/passing.htm"
 htmlPage = requests.get(page)
-# tree = html.fromstring(htmlPage.content)
 soup = bs4.BeautifulSoup(htmlPage.content, 'html.parser')
 
 def getHeaders(soupObj):
@@ -17,11 +15,13 @@ def getHeaders(soupObj):
             headers.append(item['data-stat'])
             headersDescription.append(item['aria-label'])
             # print(item['data-stat'])
-    print(headers)
-    print(headersDescription)
+    # print(headers)
+    # print(headersDescription)
+    return {
+        'headers': headers,
+        'headersDescription': headersDescription
+    }
 
-            # print(item['aria-label'])
-    # print(headerSoup)
 
 def scraping(soupObj, tag):
     tagSoup = soupObj.find_all(tag)
@@ -30,7 +30,8 @@ def scraping(soupObj, tag):
             print(i['data-stat'])
             print(i.string)
 # scraping(soup, 'td')
-getHeaders(soup)
+k = getHeaders(soup)
+# print(k['headers'])
 
 
 # def scraping(arr):
