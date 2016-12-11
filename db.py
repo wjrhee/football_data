@@ -1,28 +1,20 @@
 import psycopg2
 import scraper
 
-# print(scraper.getHeaders(scraper.soup))
-
 headers, headersDescription = [], []
 customQBDataTypesArr = ['varchar', 'varchar', 'varchar', 'integer', 'varchar']
 
-def generateTables(tableName):
+def generateTables(tableName, db_dataTypeArr, page):
     checkSQLcommand = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}'"
     headerSQLcommand = "CREATE TABLE {0}(id serial PRIMARY KEY,"
     count = 0
-    headers = scraper.getHeaders(scraper.soup)
-    print(headers['headers'])
+    headers = scraper.getHeaders(page)
 
     for header in headers['headers']:
-        # print(header)
-        if (count < len(customQBDataTypesArr)):
-            db_dataType = customQBDataTypesArr[count]
-        else:
-            db_dataType = 'integer'
         if (count == len(headers['headers']) - 1):
-            headerSQLcommand = headerSQLcommand + header + " {0}".format(db_dataType)
+            headerSQLcommand = headerSQLcommand + header + " {0}".format(db_dataTypeArr[count])
         else:
-            headerSQLcommand = headerSQLcommand + header + " {0}, ".format(db_dataType)
+            headerSQLcommand = headerSQLcommand + header + " {0}, ".format(db_dataTypeArr[count])
         count += 1
 
     headerSQLcommand = headerSQLcommand + ");"
@@ -35,15 +27,3 @@ def generateTables(tableName):
     conn.commit()
     cur.close()
     conn.close()
-
-generateTables("aaa")
-# print(headerSQLcommand[630:])
-# x = [m.start() for m in re.finditer('ranker',headerSQLcommand)]
-# print(x)
-# print(headerSQLcommand.find('varchar'))
-# headerSQLcommand = headers.headers
-
-
-
-# cur.execute("SELECT * FROM ")
-# print("{0} files copied from {1} into {2}".format(len(final_list), src_path[:len(src_path)-6], dest_path))
