@@ -18,10 +18,27 @@ def getHeaders(page):
 
 # pass in 'td' for pro-football-reference
 def scraping(page, tag):
+    allData = []
+    playerData = {}
     htmlPage = requests.get(page)
     soup = bs4.BeautifulSoup(htmlPage.content, 'html.parser')
     tagSoup = soup.find_all(tag)
-    for i in tagSoup:
-        if(hasattr(i, 'data-stat')):
-            print(i['data-stat'])
-            print(i.string)
+    for player in tagSoup:
+        for stat in player.contents:
+            if(hasattr(stat, 'data-stat')):
+                playerData[stat['data-stat']] = stat.string
+        allData.append(playerData)
+        playerData = {}
+    return allData
+
+
+    # # TEST ONE DATA SET
+    # i = tagSoup[1]
+    # for j in i.contents:
+    #     print(j)
+
+
+testPage = "http://www.pro-football-reference.com/years/2016/passing.htm"
+testTag = 'tr'
+x = scraping(testPage, testTag)
+print(x)

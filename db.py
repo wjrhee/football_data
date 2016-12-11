@@ -1,3 +1,5 @@
+# TODO - finish insert data into database function
+
 import psycopg2
 import scraper
 
@@ -27,3 +29,6 @@ def generateTables(tableName, db_dataTypeArr, page):
     conn.commit()
     cur.close()
     conn.close()
+
+def insertData(data):
+    insertSQLcommand = ""
