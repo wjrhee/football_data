@@ -1,20 +1,16 @@
-# TODO - making requests in both modules.  Reorganize.
-
 import psycopg2
-import bs4
-import requests
+import scraper
+
+# print(scraper.getHeaders(scraper.soup))
 
 headers, headersDescription = [], []
-page = "http://www.pro-football-reference.com/years/2016/passing.htm"
-htmlPage = requests.get(page)
-soup = bs4.BeautifulSoup(htmlPage.content, 'html.parser')
 customQBDataTypesArr = ['varchar', 'varchar', 'varchar', 'integer', 'varchar']
 
 def generateTables(tableName):
     checkSQLcommand = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}'"
     headerSQLcommand = "CREATE TABLE {0}(id serial PRIMARY KEY,"
     count = 0
-    headers = getHeaders(soup)
+    headers = scraper.getHeaders(scraper.soup)
     print(headers['headers'])
 
     for header in headers['headers']:
@@ -40,21 +36,7 @@ def generateTables(tableName):
     cur.close()
     conn.close()
 
-def getHeaders(soupObj):
-    headerSoup = soupObj.tr
-    for item in headerSoup:
-        if(hasattr(item, 'data-stat')):
-            headers.append(item['data-stat'])
-            headersDescription.append(item['aria-label'])
-            # print(item['data-stat'])
-    # print(headers)
-    # print(headersDescription)
-    return {
-        'headers': headers,
-        'headersDescription': headersDescription
-    }
-
-generateTables("quaterbacks")
+generateTables("aaa")
 # print(headerSQLcommand[630:])
 # x = [m.start() for m in re.finditer('ranker',headerSQLcommand)]
 # print(x)

@@ -14,9 +14,6 @@ def getHeaders(soupObj):
         if(hasattr(item, 'data-stat')):
             headers.append(item['data-stat'])
             headersDescription.append(item['aria-label'])
-            # print(item['data-stat'])
-    # print(headers)
-    # print(headersDescription)
     return {
         'headers': headers,
         'headersDescription': headersDescription
@@ -30,7 +27,7 @@ def scraping(soupObj, tag):
             print(i['data-stat'])
             print(i.string)
 # scraping(soup, 'td')
-k = getHeaders(soup)
+# k = getHeaders(soup)
 # print(k['headers'])
 
 
