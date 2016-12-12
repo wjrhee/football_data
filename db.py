@@ -3,7 +3,7 @@ import scraper
 
 headers, headersDescription = [], []
 
-def generateTables(tableName, db_dataTypeArr, page):
+def generateTables(tableName, page):
     checkSQLcommand = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{0}'"
     headerSQLcommand = "CREATE TABLE {0}(id serial PRIMARY KEY,"
     count = 0
@@ -39,7 +39,7 @@ def insertData(tableName, dataObj, headers):
 
     for player in insertObj:
         count = 0
-        skip = False
+
         for header in headers:
             insertSQLcommand = insertSQLcommand + header
             if (count != len(headers) - 1):
@@ -50,8 +50,7 @@ def insertData(tableName, dataObj, headers):
         count = 0
 
         for data in player:
-            if(str(data) == 'Rk'):
-                skip = True
+
 
             cleanData = apostrapheReplacer(str(data))
             insertSQLcommand += "'{0}'".format(cleanData)
@@ -60,11 +59,11 @@ def insertData(tableName, dataObj, headers):
             count += 1
         count = 0
         insertSQLcommand += ")"
-        if(not(skip)):
-            cur = conn.cursor()
-            cur.execute(insertSQLcommand)
-            conn.commit()
-            cur.close()
+
+        cur = conn.cursor()
+        cur.execute(insertSQLcommand)
+        conn.commit()
+        cur.close()
         print(insertSQLcommand)
         insertSQLcommand = "INSERT INTO {0} (".format(tableName)
     conn.close()
