@@ -3,7 +3,8 @@
 import bs4
 import requests
 import re
-
+from selenium import webdriver
+import os
 
 def getHeaders(page):
     headers = []
@@ -55,12 +56,28 @@ def linkScrape(page, regexPattern, tag):
     return linksArr
 
 def playerDataScrape(link):
-    htmlPage = requests.get(link)
-    soup = bs4.BeautifulSoup(htmlPage.content, 'html.parser')
+    # htmlPage = requests.get(link)
+    # soup = bs4.BeautifulSoup(htmlPage.content, 'html.parser')
     # all_tables = soup.findAll('div', {'class': 'table_wrapper'})
-    test = soup.findAll('table')
-    print(len(test))
-    all = ['passing_playoffs', 'passing', 'passing_advanced']
+    # test = soup.findAll('table')
+    chromedriver = "/usr/lib/chromium-browser/chromedriver"
+    os.environ["webdriver.chrome.driver"] = chromedriver
+    driver = webdriver.Chrome(chromedriver)
+
+    driver.get(link)
+
+    html = driver.page_source
+
+    soup = bs4.BeautifulSoup(html, "html.parser")
+
+    allTables = soup.find_all("table")
+    print(len(allTables))
+
+    # for tag in soup.find_all('table'):
+    #     print(len(tag))
+
+    # print(soup)
+    # all = ['passing_playoffs', 'passing', 'passing_advanced']
 
     # print(all_tables[0].findAll('table'))
     # for i in all_tables:
