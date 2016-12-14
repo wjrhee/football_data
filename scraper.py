@@ -39,7 +39,7 @@ def scraping(page, tag):
 
 def linkScrape(pageList, linkPattern, tag, excludePattern):
     linksArr = []
-    
+
     for pageObj in pageList:
         page = pageObj['link']
 
@@ -71,10 +71,22 @@ def playerDataScrape(link):
 
     soup = bs4.BeautifulSoup(html, "html.parser")
 
-    allTables = soup.find_all("table")
-
+    allTables = soup.find_all("tr")
     for i in allTables:
-        print(i.contents)
+        # print(i.a)
+        for j in i.contents:
+            print(j)
+        print('-_________________________')
+
+        # print(i.contents)
+
+    # for i in allTables:
+    #     # print(i.contents)
+    #     for j in i.contents:
+    #         if(isinstance(j, bs4.element.Tag)):
+    #         # if(j is bs4.element.Tag):
+    #             print(j.contents)
+    #             print('_____________________________________________________')
 
         # for j in i.contents:
         #     if (hasattr(stat, 'data-stat')):
@@ -102,8 +114,8 @@ def scrape(page):
 testPage = "http://www.pro-football-reference.com/years/2016/"
 page2 = "http://www.pro-football-reference.com/teams/atl/2016.htm"
 playerTestPage = "http://www.pro-football-reference.com/players/B/BradTo00.htm"
-# playerDataScrape(playerTestPage)
-scrape(page2)
+playerDataScrape(playerTestPage)
+# scrape(page2)
 
 # scrape("http://www.pro-football-reference.com/years/2016/passing.htm", 'tr')
     # # TEST ONE DATA SET
