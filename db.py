@@ -50,9 +50,7 @@ def insertData(tableName, dataObj, headers):
         count = 0
 
         for data in player:
-
-
-            cleanData = apostrapheReplacer(str(data))
+            cleanData = apostropheReplacer(str(data))
             insertSQLcommand += "'{0}'".format(cleanData)
             if(count != len(player) - 1):
                 insertSQLcommand += ", "
@@ -69,6 +67,7 @@ def insertData(tableName, dataObj, headers):
     conn.close()
 
 
-def apostrapheReplacer(str):
+def apostropheReplacer(str):
+    # For cases like Le'Veon Bell, the apostrophe needs to be replaced with two
     str = str.replace('\'', '\'\'')
     return str
