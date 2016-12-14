@@ -72,29 +72,21 @@ def playerDataScrape(link):
     soup = bs4.BeautifulSoup(html, "html.parser")
 
     allTables = soup.find_all("tr")
+    coolData = []
     for i in allTables:
-        # print(i.a)
         for j in i.contents:
-            print(j)
-        print('-_________________________')
+            if(isinstance(j, bs4.element.Tag)):
 
-        # print(i.contents)
+                if(j.get('data-stat') is not None):
+                    # print(j)
+                    coolData.append({
+                        'title': j['data-stat'],
+                        'data': j.string
+                    })
 
-    # for i in allTables:
-    #     # print(i.contents)
-    #     for j in i.contents:
-    #         if(isinstance(j, bs4.element.Tag)):
-    #         # if(j is bs4.element.Tag):
-    #             print(j.contents)
-    #             print('_____________________________________________________')
+    for item in coolData:
+        print(item)
 
-        # for j in i.contents:
-        #     if (hasattr(stat, 'data-stat')):
-        #         playerData.append(stat.string)
-        #     print(j)
-        # print(i.contents)
-        # print(i['id'])
-        # print("___________________________________________________")
 
 
 def scrape(page):
