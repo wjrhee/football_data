@@ -62,6 +62,19 @@ def linkScrape(pageList, linkPattern, tag, excludePattern):
 
 
 def playerDataScrape(link):
+
+    # function to take in bs4 elements and return a filtered array for only bs4 tag elements with only specified tag names
+    def returnTags(bs4Element, tagName):
+        tags = []
+        for item in bs4Element:
+            if(isinstance(item, bs4.element.Tag)):
+                if(len(tagName) > 0):
+                    if(item.name == tagName):
+                        tags.append(item)
+                else:
+                    tags.append(item)
+        return tags
+
     chromedriver = "/usr/lib/chromium-browser/chromedriver"
     os.environ["webdriver.chrome.driver"] = chromedriver
     driver = webdriver.Chrome(chromedriver)
@@ -71,30 +84,29 @@ def playerDataScrape(link):
 
     soup = bs4.BeautifulSoup(html, "html.parser")
 
-    allTables = soup.find_all("tr")
-
     allData = {}
 
-    bigTables = soup.find_all("table")
-    for table in bigTables:
+    allTables = soup.find_all("table")
+    for table in allTables:
         # table name
         tableName = table['id']
         allData[tableName] = {}
-        for item in table.contents:
-            if(isinstance(item, bs4.element.Tag)):
-                if(item.name == "tbody"):
-                    for row in item.contents:
-                        if(isinstance(row, bs4.element.Tag)):
-                            if(row.a):
-                                year = row.a.string
-                                if(not(allData[tableName].get(year))):
-                                    allData[tableName][year] = []
-                            for cell in row.contents:
-                                if(cell.name == "td"):
-                                    allData[tableName][year].append({
-                                        'title': cell['data-stat'],
-                                        'data': cell.string
-                                    })
+        for tableElements in returnTags(table.contents, "tbody"):
+            for row in returnTags(tableElements.contents, ""):
+                if (row.a):
+                    year = row.a.string
+                    if (not (allData[tableName].get(year))):
+                        allData[tableName][year] = []
+                for cell in row.contents:
+                    if (cell.name == "td"):
+                        allData[tableName][year].append({
+                            'title': cell['data-stat'],
+                            'data': cell.string
+                        })
+
+    for i in allData:
+        print(i)
+        print(allData[i])
     return allData
 
 

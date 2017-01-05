@@ -1,5 +1,6 @@
 # TODO - need to pass data from scraper to db and enter into database
 # TODO - test webcrawling with scraping.  Scraping a single player works
+# TODO - change using oop style?
 
 # start at http://www.pro-football-reference.com/years/2016/
 # gather team links -> gather player links -> gather player data
