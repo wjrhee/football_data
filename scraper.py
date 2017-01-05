@@ -21,21 +21,21 @@ def getHeaders(page):
 
 # pass in 'tr' for pro-football-reference
 # based on http://www.pro-football-reference.com/years/2016/passing.htm
-def scraping(page, tag):
-    allData = []
-    playerData = []
-    htmlPage = requests.get(page)
-    soup = bs4.BeautifulSoup(htmlPage.content, 'html.parser')
-    tagSoup = soup.find_all(tag)
-    for player in tagSoup:
-        linkTag = player.a
-        if (linkTag is not (None)):
-            for stat in player.contents:
-                if(hasattr(stat, 'data-stat')):
-                    playerData.append(stat.string)
-            allData.append(playerData)
-        playerData = []
-    return allData
+# def scraping(page, tag):
+#     allData = []
+#     playerData = []
+#     htmlPage = requests.get(page)
+#     soup = bs4.BeautifulSoup(htmlPage.content, 'html.parser')
+#     tagSoup = soup.find_all(tag)
+#     for player in tagSoup:
+#         linkTag = player.a
+#         if (linkTag is not (None)):
+#             for stat in player.contents:
+#                 if(hasattr(stat, 'data-stat')):
+#                     playerData.append(stat.string)
+#             allData.append(playerData)
+#         playerData = []
+#     return allData
 
 def linkScrape(pageList, linkPattern, tag, excludePattern):
     linksArr = []
@@ -72,20 +72,30 @@ def playerDataScrape(link):
     soup = bs4.BeautifulSoup(html, "html.parser")
 
     allTables = soup.find_all("tr")
-    coolData = []
-    for i in allTables:
-        for j in i.contents:
-            if(isinstance(j, bs4.element.Tag)):
 
-                if(j.get('data-stat') is not None):
-                    # print(j)
-                    coolData.append({
-                        'title': j['data-stat'],
-                        'data': j.string
-                    })
+    allData = {}
 
-    for item in coolData:
-        print(item)
+    bigTables = soup.find_all("table")
+    for table in bigTables:
+        # table name
+        tableName = table['id']
+        allData[tableName] = {}
+        for item in table.contents:
+            if(isinstance(item, bs4.element.Tag)):
+                if(item.name == "tbody"):
+                    for row in item.contents:
+                        if(isinstance(row, bs4.element.Tag)):
+                            if(row.a):
+                                year = row.a.string
+                                if(not(allData[tableName].get(year))):
+                                    allData[tableName][year] = []
+                            for cell in row.contents:
+                                if(cell.name == "td"):
+                                    allData[tableName][year].append({
+                                        'title': cell['data-stat'],
+                                        'data': cell.string
+                                    })
+    return allData
 
 
 
